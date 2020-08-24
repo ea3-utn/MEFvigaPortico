@@ -53,11 +53,11 @@ function [cargaLocal]=proyeccionCargas(ELEMENTO,NODO,cargasLocales)
 
       try
 
-	cargaLocal=[cargaLocal;elem,(viga+barra)']
+	cargaLocal=[cargaLocal;elem,(viga+barra)'];
 
       catch
 
-	cargaLocal=[elem,(viga+barra)']
+	cargaLocal=[elem,(viga+barra)'];
 
       end_try_catch
       

@@ -8,7 +8,7 @@
 ##---------CICLO LECTIVO 2020----------------------------------------------------------------
 
 function [P,U]=vectorCargas(GL,CARGAx,CARGAy,MOMENTO,CCx,CCy,CCw)
-  
+
   
   P=NaN(GL,1);
 
@@ -92,6 +92,8 @@ function [P,U]=vectorCargas(GL,CARGAx,CARGAy,MOMENTO,CCx,CCy,CCw)
     
   endfor
 
+  P(isnan(U)&isnan(P))=0;   % Si no se conoce Ui entonces Pi igual a cero.
+  
 endfunction
 
-  
+

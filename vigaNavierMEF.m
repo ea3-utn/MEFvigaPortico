@@ -25,43 +25,61 @@ color=["k","r","g","b","m","c","k","r","g","b","m","c"];
 
 ## CARACTERISTICAS DEL MATERIAL
 
-E=70000;
+t=1.27e-3;
 
-A=200;
+A1=t*2*10e-3;
 
-I=200000;
+A2=t*6e-3;
+
+E=70.36e9;
+
+L=100e-3;
+
+Fe=17.27/4;
+
+Fs=.9*85.8375/4;
+
+Fg=.1*85.8375/2;
+
+Ipc=2.20108e-10; # Momento de inercia desde centroide
+
+xc=0.00296549; # Centroide
+
+f=1;
+
+#Ip=Ipc+A1*(f*10e-3-xc)^2;
+
+Ip=Ipc;
+
+Is=2.28600e-11;
+
+##---- CARACTERISTICAS FISICO-GEOMETRICAS
+
+NODO=[0 0;0 L;L L;L 0;L/2 L/2]; % [Xi Yi] en fila i define nodo i
+
+ELEMENTO=[1 2 E A1 Ip;2 3 E A1 Ipc;4 3 E A1 Ip;4 1 E A1 Ipc;1 5 E A2 Is;2 5 E A2 Is;3 5 E A2 Is;4 5 E A2 Is]; % [NodoInicial NodoFinal E A I] en fila i define ubicacion de la viga "i-esima" y sus propiedades
+
+#%--------------CARGAS ---> L O C A L E S
+
+cargasLocales=[1 -Fs/L 0;3 -Fs/L 0]; # Nelemento Qx Qy
+
+#########%  CONDICIONES DE CONTORNO Y CARGAS ---> G L O B A L E S
+
+%-------- COND./CARGAS NULAS SE DEJAN V A C I A S = [] -------------#
 
 
-## CARACTERISTICAS FISICO-GEOMETRICAS
+CCx=[1 0;4 0]; % [Nodo Ux] define condicion de contorno en nodo i
 
-NODO=[0 0;1000 0;2000 0]; % [Xi Yi] en fila i define nodo i
-
-ELEMENTO=[1 2 E A I;2 3 E A I;]; % [NodoInicial NodoFinal E A I] en fila i define ubicacion de la viga "i-esima" y sus propiedades 
-
-## CARGAS ---> L O C A L E S
-
-p1=1;
-p2=2;
-
-miguel=p1*(1-x/1000)+p2*x/1000;
-
-cargasLocales=[1 miguel 0;2 0 miguel]; # Nelemento Qx Qy
-
-## CONDICIONES DE CONTORNO Y CARGAS ---> G L O B A L E S
-
-#-------- COND./CARGAS NULAS SE DEJAN V A C I A S = [] -------------#
-
-CCx=[1 0;3 0]; % [Nodo Ux] define condicion de contorno en nodo i
-
-CCy=[1 0;3 0]; % [Nodo Uy] define condicion de contorno en nodo i 
+CCy=[1 0;4 0]; % [Nodo Uy] define condicion de contorno en nodo i 
 
 CCw=[]; % [Nodo W] define condicion de contorno en nodo i 
 
-CARGAx=[2 0]; % [Nodo Px] define carga en nodo i
+CARGAx=[]; % [Nodo Px] define carga en nodo i
 
-CARGAy=[2 -10000]; % [Nodo Py] define carga en nodo i
+CARGAy=[2 -Fe;3 -Fe;5 -Fg]; % [Nodo Py] define carga en nodo i
 
-MOMENTO=[1 0;2 20000;3 0]; % [Nodo Py] define MOMENTO en nodo i ( P O S I T I V O sentido anti-horario)
+MOMENTO=[]; % [Nodo M] define MOMENTO en nodo i ( P O S I T I V O sentido anti-horario)
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,14 +207,14 @@ endwhile
 
 GLY=zeros(1,GL);  % Grados de libertad globales discriminados
 
-GLY(linspace(2,GL-1,3))=1;
+GLY(linspace(2,GL-1,GL/3))=1;
 
 GLW=mod(linspace(1,GL,GL),3)==0;   
 
 GLX=mod(linspace(1,GL,GL),1)==0-GLW-GLY;
 
 
-postProcesado(ELEMENTO,NODO,U,10)
+postProcesado(ELEMENTO,NODO,U,10000)
 
 
 				% VERIFICACION
