@@ -102,7 +102,8 @@ i=1;guyan=[1 1];
 
 CC=sum(isnan(U));
 
-while (isempty(guyan)<1 & i<CC+1)
+				#while (isempty(guyan)<1 && i<CC+1)
+while (i<CC+1)
   
   Null=INDEX(isnan(U));
 
@@ -123,15 +124,11 @@ while (isempty(guyan)<1 & i<CC+1)
     end_try_catch
 
     [KG,P,U,fq]=condensacionGuyan(KG,P,U,fq,guyan,1,2);
-
-    i++;
-    
-  else
-
-    guyan=[];
-    
+        
   endif
-    
+
+  i++;
+  
 endwhile
 
 
